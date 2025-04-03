@@ -1,17 +1,83 @@
-import { Button, VerticalBox } from "std-widgets.slint";
+import { Button } from "std-widgets.slint";
+import { GroupBox , SpinBox } from "std-widgets.slint";
 
-export component AppWindow inherits Window {
-    in-out property <int> counter: 42;
-    callback request-increase-value();
-    VerticalBox {
+
+export component CameraCalculatorUI inherits Window {
+    in property<float> focal_length;
+    in property<float> sensor_width;
+    in property<float> image_width;
+    in property<float> distance_to_target;
+
+    out property<float> ppm;
+    out property<float> fov;
+
+    callback calculate();
+
+    VerticalLayout {
+        spacing: 16px;
+
         Text {
-            text: "Counter: \{root.counter}";
+            text: "Camera PPM Calculator";
+            font-size: 24px;
+            horizontal-alignment: center;
         }
 
-        Button {
-            text: "Increase value";
-            clicked => {
-                root.request-increase-value();
+        GroupBox {
+            title: "Input Parameters";
+            VerticalLayout {
+                spacing: 8px;
+
+                HorizontalLayout {
+                    Text { text: "Focal Length (mm):" ;}
+                    SpinBox { value: root.focal_length; minimum: 1; maximum: 200; step-size: 1 ;}
+                }
+
+                HorizontalLayout {
+                    Text { text: "Sensor Width (mm):" ;}
+                    SpinBox { value: root.sensor_width; minimum: 1; maximum: 100; step-size
+                        : 0.1 ;}
+                }
+
+                HorizontalLayout {
+                    Text { text: "Image Width (px):" ;}
+                    SpinBox { value: root.image_width; minimum: 100; maximum: 10000; step-size
+                        : 10 ;}
+                }
+
+                HorizontalLayout {
+                    Text { text: "Distance to Target (m):" ;}
+                    SpinBox { value: root.distance_to_target; minimum: 0.1; maximum: 100; step-size
+                        : 0.1 ;}
+                }
+
+                Button {
+                    text: "Calculate";
+                    clicked => {
+                        root.calculate();
+                    }
+                }
+            }
+        }
+
+        GroupBox {
+            title: "Results";
+            VerticalLayout {
+                spacing: 8px;
+                Text { text: "Pixels per meter: " + ppm + " px/m" ;}
+                Text { text: "Horizontal FoV: " + fov + " degrees" ;}
+            }
+        }
+
+        Rectangle {
+            height: 200px;
+            border-width: 1px;
+            border-color: #888;
+            Text {
+                text: "Visualization Area (FoV, target at distance)";
+                horizontal-alignment: center;
+                vertical-alignment: center;
+                font-size: 14px;
+                color: #666;
             }
         }
     }
