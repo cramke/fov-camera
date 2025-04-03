@@ -8,8 +8,21 @@ export component CameraCalculatorUI inherits Window {
     in property<float> image_width;
     in property<float> distance_to_target;
 
-    out property<float> ppm;
-    out property<float> fov;
+    in property<float> fov;              // Degrees
+    in property<float> distance_m;       // Meters
+    in property<float> ppm;              // Pixels per meter
+
+    property<float> scale_factor: 40; // Pixels per meter (for rendering)
+
+    // Derived coordinates
+    property<float> origin_x: root.width / 1px / 2;
+    property<float> origin_y: root.height / 1px - 10;
+    property<float> fov_rad: root.fov * 3.14159 / 180;
+    property<float> half_fov_rad: root.fov_rad / 2;
+    property<float> dist_px: root.distance_m * root.scale_factor;
+    property<float> left_x: root.origin_x - root.dist_px * tan(half_fov_rad * 1deg);
+    property<float> right_x: root.origin_x - root.dist_px * tan(half_fov_rad * 1deg);
+    property<float> target_y: root.origin_y - root.dist_px;
 
     callback calculate();
 
@@ -69,15 +82,88 @@ export component CameraCalculatorUI inherits Window {
         }
 
         Rectangle {
-            height: 200px;
+            background: white;
+            border-color: #ccc;
             border-width: 1px;
-            border-color: #888;
+            width: parent.width;
+            height: parent.height / 4;
+    
+            // Draw FoV triangle
+            Path {
+                fill: #cceeff;
+                stroke: #007acc;
+                stroke-width: 2px;
+
+                MoveTo {
+                    x: root.origin_x;
+                    y: root.origin_y;
+                }
+                LineTo {
+                    x: root.left_x;
+                    y: root.target_y;
+                } 
+                LineTo  {
+                    x: root.right_x;
+                    y: root.target_y;
+                }
+                Close {
+
+                }
+
+            }
+    
+            // Draw camera origin as a small filled circle
+            Path {
+                fill: black;
+
+                MoveTo {
+                    x: root.origin_x + 4;
+                    y: root.origin_y;
+                }
+                ArcTo {
+                    radius-x: 4; 
+                    radius-y: 4; 
+                    x: 0;
+                    y: 1; 
+                }
+                ArcTo {
+                    radius-x: 4; 
+                    radius-y: 4; 
+                    x: 0;
+                    y: 1; 
+                }
+
+            }
+    
+            // Draw target line
+            Path {
+                stroke: #00aa00;
+                stroke-width: 1px;
+                MoveTo {
+                    x: root.origin_x;
+                    y: root.origin_y;
+                } 
+                MoveTo {
+                    x: root.origin_x;
+                    y: root.target_y;
+                }
+            }
+    
+            // Optional: annotate
             Text {
-                text: "Visualization Area (FoV, target at distance)";
-                horizontal-alignment: center;
-                vertical-alignment: center;
-                font-size: 14px;
-                color: #666;
+                text: "PPM: " + ppm + " px/m";
+                font-size: 12px;
+                color: #333;
+                x: 5px;
+                y: 5px;
+            }
+    
+            Text {
+                text: "Width: " + (right_x - left_x) + " px";
+                font-size: 12px;
+                color: #333;
+                x: root.origin_x * 1px - 40px;
+                y: root.target_y * 1px - 16px;
             }
         }
     }
