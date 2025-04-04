@@ -12,7 +12,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         let ui_handle = ui.as_weak();
         move || {
             let ui = ui_handle.unwrap();
-            ui.set_focal_length(ui.get_fov() + 1 as f32);
+            ui.set_focal_length(ui.get_fov() + 1_f32);
         }
     });
 
