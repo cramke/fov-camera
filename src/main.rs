@@ -6,20 +6,36 @@ use std::error::Error;
 
 slint::include_modules!();
 
-fn main() -> Result<(), Box<dyn Error>> {
-    let ui = CameraCalculatorUI::new()?;
-    let mut camera: Camera = Camera::new();
-    camera.set_width(1920);
-
-    ui.on_calculate({
-        let ui_handle = ui.as_weak();
-        move || {
-            let ui = ui_handle.unwrap();
-            ui.set_focal_length(ui.get_fov() + 1_f32);
+struct App {
+    camera: Camera,
+    ui: CameraCalculatorUI,
+}
+impl App {
+    pub fn new() -> Self {
+        App {
+            camera: Camera::new(),
+            ui: CameraCalculatorUI::new().unwrap(),
         }
-    });
+    }
 
-    ui.run()?;
+    pub fn setup_callbacks(&mut self) {
+        self.ui.on_calculate({
+            let ui_handle = self.ui.as_weak();
+            move || {
+                let ui = ui_handle.unwrap();
+                ui.set_focal_length(9999_f32);
+            }
+        });
+    }
+}
+
+fn main() -> Result<(), Box<dyn Error>> {
+    let mut app = App::new();
+    app.setup_callbacks();
+
+    app.camera.set_width(1920);
+
+    app.ui.run()?;
 
     Ok(())
 }
