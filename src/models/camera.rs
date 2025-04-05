@@ -105,3 +105,14 @@ impl Default for Camera {
         Camera::new()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn it_works() {
+        let camera = Camera::new();
+        assert_eq!(camera.get_aspect_ratio(), 1.0);
+    }
+}
