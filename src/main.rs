@@ -1,13 +1,13 @@
 // Prevent console window in addition to Slint window in Windows release builds when, e.g., starting the app via file manager. Ignored on other platforms.
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use std::{cell::RefCell, rc::Rc};
 use fov_camera::models::camera::Camera;
+use std::{cell::RefCell, rc::Rc};
 
 slint::include_modules!();
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let app: CameraCalculatorUI =  CameraCalculatorUI::new().unwrap();
+    let app: CameraCalculatorUI = CameraCalculatorUI::new().unwrap();
     let camera = Rc::new(RefCell::new(Camera::default()));
 
     {
