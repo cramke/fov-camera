@@ -8,19 +8,12 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
-  format_check:
+  lint_static_check:
     name: Rust project - latest
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: cargo fmt --all --check
-
-
-  clippy_check:
-    name: Rust project - latest
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
       - run: cargo clippy
 
   build_and_test:
