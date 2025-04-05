@@ -1,4 +1,3 @@
-
 pub struct Camera {
     width_mm: f32,
     height_mm: f32,
