@@ -3,14 +3,14 @@ import { GroupBox , SpinBox } from "std-widgets.slint";
 
 
 export component CameraCalculatorUI inherits Window {
-    in property<float> focal_length;
-    in property<float> sensor_width;
-    in property<float> image_width;
-    in property<float> distance_to_target;
+    in-out property<int> focal_length;
+    in-out property<float> sensor_width;
+    in-out property<float> image_width;
+    in-out property<float> distance_to_target;
 
-    in property<float> fov;              // Degrees
-    in property<float> distance_m;       // Meters
-    in property<float> ppm;              // Pixels per meter
+    in-out property<float> fov;              // Degrees
+    in-out property<float> distance_m;       // Meters
+    in-out property<float> ppm;              // Pixels per meter
 
     property<float> scale_factor: 40; // Pixels per meter (for rendering)
 
@@ -42,7 +42,7 @@ export component CameraCalculatorUI inherits Window {
 
                 HorizontalLayout {
                     Text { text: "Focal Length (mm):" ;}
-                    SpinBox { value: root.focal_length; minimum: 1; maximum: 200; step-size: 1 ;}
+                    SpinBox { value <=> root.focal_length; minimum: 1; maximum: 200; step-size: 1 ;}
                 }
 
                 HorizontalLayout {
@@ -66,6 +66,7 @@ export component CameraCalculatorUI inherits Window {
                 Button {
                     text: "Calculate";
                     clicked => {
+                        debug("Calculating UI, Focal length: ", root.focal_length);
                         root.calculate();
                     }
                 }
@@ -76,8 +77,8 @@ export component CameraCalculatorUI inherits Window {
             title: "Results";
             VerticalLayout {
                 spacing: 8px;
-                Text { text: "Pixels per meter: " + ppm + " px/m" ;}
-                Text { text: "Horizontal FoV: " + fov + " degrees" ;}
+                Text { text: "Pixels per meter: " + root.ppm + " px/m" ;}
+                Text { text: "Horizontal FoV: " + root.fov + " degrees" ;}
             }
         }
 
