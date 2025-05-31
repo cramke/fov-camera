@@ -5,9 +5,3 @@ edition = "2024"
 authors = [
     "Carsten Ramke <carsten.ramke@gmail.com>"
 ]
-
-[dependencies]
-slint = "1.10.0"
-
-[build-dependencies]
-slint-build = "1.10.0"
