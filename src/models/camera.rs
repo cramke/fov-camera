@@ -105,3 +105,25 @@ impl Default for Camera {
         Camera::new()
     }
 }
+
+#[cfg(test)]
+
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_camera_creation() {
+        let camera = Camera::new();
+        assert_eq!(camera.get_width_mm(), 0.0);
+        assert_eq!(camera.get_height_mm(), 0.0);
+        assert_eq!(camera.get_width_pixels(), 0);
+        assert_eq!(camera.get_height_pixels(), 0);
+        assert_eq!(camera.get_aspect_ratio(), 1.0);
+        assert_eq!(camera.get_focal_length(), 0.0);
+        assert_eq!(camera.get_fov(), 0.0);
+        assert_eq!(camera.get_working_distance(), 0.0);
+        assert_eq!(camera.get_ppm(), 0.0);
+        assert_eq!(camera.get_gsd(), 0.0);
+        assert_eq!(camera.get_format(), "");
+    }
+}
